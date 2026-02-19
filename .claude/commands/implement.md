@@ -144,7 +144,36 @@ Once all plan tasks are complete and committed:
 
 ---
 
-## Step 6 — Write the e2e checklist
+## Step 6 — Write the implementation decisions log
+
+Create `.claude/_todos/$ARGUMENTS/implementation-decisions.md`.
+
+Reflect on everything built during this session — the tasks completed, patterns chosen, trade-offs made — and write 3-5 key decision entries.
+
+Format:
+
+```markdown
+# Implementation Decisions: $ARGUMENTS
+
+Key technical decisions made during implementation.
+
+---
+
+## [Short descriptive title] — YYYY-MM-DD
+- **Decision:** what was built or decided
+- **Reasoning:** why this approach
+- **Alternatives:** what was considered but not used (or N/A)
+
+---
+```
+
+Focus on real decisions: architecture choices, library selections, data model trade-offs, pattern selections. Not routine steps like "wrote a test" or "added a route".
+
+If a decisions file already exists (resuming a partial implementation), append new entries rather than overwriting.
+
+---
+
+## Step 7 — Write the e2e checklist
 
 Create `.claude/_todos/$ARGUMENTS/e2e-checklist.md` using `.claude/_templates/e2e-checklist.md` as the structure.
 
@@ -158,7 +187,7 @@ Every scenario must be specific enough to follow without reading the spec — in
 
 ---
 
-## Step 7 — Output summary
+## Step 8 — Output summary
 
 ```
 Implementation complete: $ARGUMENTS
@@ -168,6 +197,7 @@ Progress: [x] Spec  [x] Plan  [x] Build  [o] Review  [ ] Done
 Branch: <branch_name>
 Tasks completed: <N>
 
-E2E checklist written: .claude/_todos/$ARGUMENTS/e2e-checklist.md
+Decisions log: .claude/_todos/$ARGUMENTS/implementation-decisions.md
+E2E checklist: .claude/_todos/$ARGUMENTS/e2e-checklist.md
 Review and check off each item manually before marking Done.
 ```
