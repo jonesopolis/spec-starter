@@ -1,0 +1,27 @@
+{
+  "name": "spec-starter",
+  "version": "1.0.0",
+  "description": "Claude Code project template for structured feature development",
+  "bin": {
+    "spec-starter": "bin/index.js"
+  },
+  "files": [
+    "bin/",
+    ".claude/commands/",
+    ".claude/skills/",
+    ".claude/_templates/",
+    ".claude/hooks/",
+    ".claude/settings.json"
+  ],
+  "keywords": [
+    "claude",
+    "claude-code",
+    "ai",
+    "template"
+  ],
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jonesopolis/spec-starter.git"
+  }
+}

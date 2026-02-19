@@ -1,0 +1,25 @@
+# <feature_title>
+
+**Slug:** `<MM.DD-feature_slug>`
+**Branch:** `<branch_name>`
+**Last Tested:** —
+
+## Progress
+
+- [ ] Brief
+- [ ] Blueprint
+- [ ] Implement
+- [ ] Review
+- [ ] Done
+
+> `[ ]` not started · `[?]` needs attention · `[o]` in progress · `[x]` complete · `[!]` blocked
+
+## Description
+
+<A 2-3 sentence summary of what this feature does and why it's needed>
+
+## Key Points
+
+- <Key point 1>
+- <Key point 2>
+- <Key point 3>
