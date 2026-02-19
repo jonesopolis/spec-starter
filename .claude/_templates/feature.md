@@ -6,7 +6,7 @@
 
 - [ ] Spec
 - [ ] Plan
-- [ ] Build
+- [ ] Implement
 - [ ] Review
 - [ ] Done
 

@@ -78,7 +78,7 @@ Run /todo <idea> to create the feature folder.
 - `[o] Spec` — warn: _"Spec is still in progress. Run /todo update $ARGUMENTS to complete the spec first."_ Then stop.
 - `[x] Plan` — warn: _"A plan already exists. Re-running will overwrite plan.md."_ Then continue.
 - `[o] Plan` — warn: _"Plan is already in progress. Re-running will overwrite plan.md."_ Then continue.
-- `[o] Build` or later — warn: _"Feature is already past planning (`<active stage>`). Re-planning is unusual."_ Then continue.
+- `[o] Implement` or later — warn: _"Feature is already past planning (`<active stage>`). Re-planning is unusual."_ Then continue.
 - `[!] <stage>` — warn: _"Feature is blocked at `<stage>`. Proceeding with planning anyway."_ Then continue.
 
 ---
@@ -138,7 +138,7 @@ Include a "Key Decisions" table for any architectural trade-offs that required a
 ```
 Plan written: .claude/_todos/$ARGUMENTS/plan.md
 
-Progress: [x] Spec  [x] Plan  [ ] Build  [ ] Review  [ ] Done
+Progress: [x] Spec  [x] Plan  [ ] Implement  [ ] Review  [ ] Done
 
 To implement:
 - Run /implement $ARGUMENTS

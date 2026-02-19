@@ -19,7 +19,7 @@ No features found. Run /todo to create one.
 For each feature.md found, extract:
 - The feature title (first `#` heading)
 - The `**Branch:**` value
-- The Progress checkboxes (the 5 lines: Spec, Plan, Build, Review, Done)
+- The Progress checkboxes (the 5 lines: Spec, Plan, Implement, Review, Done)
 
 ## Step 3 — Determine active stage
 
@@ -38,20 +38,20 @@ Feature Status
 
 [o] Spec
   • <feature-title> (<feature-slug>)
-    [o]Spec  [ ]Plan  [ ]Build  [ ]Review  [ ]Done
+    [o]Spec  [ ]Plan  [ ]Implement  [ ]Review  [ ]Done
 
 [x] Spec / ready to plan
   • <feature-title> (<feature-slug>)
-    [x]Spec  [ ]Plan  [ ]Build  [ ]Review  [ ]Done
+    [x]Spec  [ ]Plan  [ ]Implement  [ ]Review  [ ]Done
 
 [o] Plan
   • <feature-title> (<feature-slug>)
-    [x]Spec  [o]Plan  [ ]Build  [ ]Review  [ ]Done
+    [x]Spec  [o]Plan  [ ]Implement  [ ]Review  [ ]Done
 
 [x] Plan / ready to build
   • ...
 
-[o] Build
+[o] Implement
   • ...
 
 [o] Review
@@ -62,7 +62,7 @@ Done
 
 Blocked
   • <feature-title> (<feature-slug>) — blocked at <stage>
-    [x]Spec  [x]Plan  [!]Build  [ ]Review  [ ]Done
+    [x]Spec  [x]Plan  [!]Implement  [ ]Review  [ ]Done
 
 ──────────────────────────────────────────────────
 <N> features total

@@ -1,0 +1,23 @@
+#!/bin/bash
+# post-edit.sh
+# Auto-commits file edits to git with a sized commit message.
+
+if git rev-parse --git-dir >/dev/null 2>&1 && [[ -n "$CLAUDE_TOOL_FILE_PATH" ]]; then
+  git add "$CLAUDE_TOOL_FILE_PATH" 2>/dev/null
+
+  CHANGED_LINES=$(git diff --cached --numstat "$CLAUDE_TOOL_FILE_PATH" 2>/dev/null | awk '{print $1+$2}')
+
+  if [[ $CHANGED_LINES -gt 0 ]]; then
+    FILENAME=$(basename "$CLAUDE_TOOL_FILE_PATH")
+
+    if [[ $CHANGED_LINES -lt 10 ]]; then
+      SIZE="minor"
+    elif [[ $CHANGED_LINES -lt 50 ]]; then
+      SIZE="moderate"
+    else
+      SIZE="major"
+    fi
+
+    git commit -m "Update $FILENAME: $SIZE changes ($CHANGED_LINES lines)" "$CLAUDE_TOOL_FILE_PATH" 2>/dev/null || true
+  fi
+fi

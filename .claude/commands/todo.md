@@ -162,7 +162,7 @@ Set the Spec checkbox to in-progress:
 ```
 - [o] Spec
 - [ ] Plan
-- [ ] Build
+- [ ] Implement
 - [ ] Review
 - [ ] Done
 ```
@@ -182,7 +182,7 @@ Feature folder created: .claude/_todos/<feature_slug>
 Branch (not created yet): <branch_name>
 Title: <feature_title>
 
-Progress: [o] Spec  [ ] Plan  [ ] Build  [ ] Review  [ ] Done
+Progress: [o] Spec  [ ] Plan  [ ] Implement  [ ] Review  [ ] Done
 
 Files:
 - feature.md (feature brief)
