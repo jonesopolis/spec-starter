@@ -54,7 +54,17 @@ Update the plan template with project-specific values so every future `/plan` ru
 
 Only replace what is known. Leave placeholders for anything still uncertain.
 
-### 5. Write `.claude/_todos/_todo.md`
+### 5. Clear the README
+
+Overwrite `README.md` with a minimal stub so the generic starter content is gone:
+
+```markdown
+# <project name>
+
+<one sentence description>
+```
+
+### 6. Write `.claude/_todos/_todo.md`
 
 
 Create a simple checklist of the first things that need to get done based on the conversation:
@@ -69,7 +79,7 @@ Create a simple checklist of the first things that need to get done based on the
 
 Keep it short and actionable. These should be the next real steps, not a full roadmap.
 
-### 6. Output
+### 7. Output
 
 ```
 CLAUDE.md updated with project context.
