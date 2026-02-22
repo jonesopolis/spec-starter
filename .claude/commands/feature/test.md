@@ -1,7 +1,7 @@
 ---
 description: Run through the e2e checklist for a completed feature
 argument-hint: "<MM.DD-slug>"
-allowed-tools: Read, Edit, Glob, Bash
+allowed-tools: Read, Edit, Glob, Bash, mcp__playwright__*
 ---
 
 Walk through the e2e checklist for a feature interactively. The feature must be marked `[x] Done` before testing is allowed.
@@ -89,6 +89,11 @@ Then stop.
 
 **Read shared testing instructions:** Check if `.claude/testing.md` exists. If it does, read it and use it throughout — it contains app-specific context like how to start the app, base URLs, test accounts, browser/device preferences, and any other setup needed to run scenarios correctly.
 
+**Playwright check:** Use the Skill tool to invoke the `playwright-test` skill. It will check whether Playwright MCP tools are available and report back.
+
+- If available → use Playwright automatically for all UI scenarios (those with a **URL** field). Note this as `playwright_available = true`.
+- If not available → fall back to manual for all UI scenarios. Note this as `playwright_available = false`.
+
 ### Step 2: Present the checklist and run scenarios
 
 Output a summary of what you're about to test:
@@ -104,10 +109,13 @@ Then work through each section of the checklist in order:
 
 For each unchecked scenario (`- [ ]`):
 1. Present the scenario clearly — what to do and what to expect
-2. For any scenario involving CLI commands or scripts, run them using Bash and report the result
-3. For UI or manual scenarios, describe exactly what to check and ask the user to confirm: `Pass or fail?`
-4. If the user confirms pass: mark the item `- [x]` in `e2e-checklist.md` using the Edit tool
-5. If the user says fail: mark the item `- [!]` in `e2e-checklist.md`, note what failed, and continue to the next scenario
+2. For CLI/script scenarios: run with Bash and report the result
+3. For UI scenarios (those with **URL**, **Steps**, and **Expected** fields):
+   - If `playwright_available = true`: run the scenario automatically using the `playwright-test` skill. Mark pass/fail based on the skill's reported outcome.
+   - If `playwright_available = false`: describe exactly what to check and ask the user: `Pass or fail?`
+4. For manual scenarios (no URL field): describe exactly what to check and ask the user: `Pass or fail?`
+5. If the user confirms pass: mark the item `- [x]` in `e2e-checklist.md` using the Edit tool
+6. If the user says fail: mark the item `- [!]` in `e2e-checklist.md`, note what failed, and continue to the next scenario
 
 Skip scenarios already marked `[x]` (previously passed) — report them as already passing.
 
