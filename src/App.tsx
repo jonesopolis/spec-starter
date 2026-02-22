@@ -2,6 +2,7 @@ import { useEffect, useMemo, useState } from "react";
 import {
   ActivityIndicator,
   Image,
+  Platform,
   Pressable,
   SafeAreaView,
   ScrollView,
@@ -13,7 +14,7 @@ import {
 import { FeatureFlagProvider, WithFeatureFlag, journeyPalette } from "@journey/ui";
 import IntakeWizard from "./intake/IntakeWizard";
 import LoginGate from "./auth/LoginGate";
-import NavigatorDashboard from "./navigator/NavigatorDashboard";
+import HomeDashboard from "./home/HomeDashboard";
 import StoreHub from "./store/StoreHub";
 import ProfileHub from "./profile/ProfileHub";
 import {
@@ -46,7 +47,7 @@ const featureFlags = {
     process.env.FEATURE_PRESCRIPTIONS_ENABLED === "true"
 };
 
-type AppTab = "navigator" | "store" | "medical" | "profile";
+type AppTab = "home" | "store" | "medical" | "profile";
 
 function snapshotFromLatest(payload: LatestIntakeResponse): IntakeSnapshot | null {
   if (!payload.latestIntake) {
@@ -122,11 +123,10 @@ function snapshotToInitialData(snapshot: IntakeSnapshot | null): Partial<Patient
 export default function App() {
   const { session, isLoading } = useSupabaseAuth();
   const [showPasswordReset, setShowPasswordReset] = useState(false);
-  const [activeTab, setActiveTab] = useState<AppTab>("navigator");
+  const [activeTab, setActiveTab] = useState<AppTab>("home");
   const [loadingIntake, setLoadingIntake] = useState(false);
-  const [intakeGateError, setIntakeGateError] = useState<string | null>(null);
-  const [requiresInitialIntake, setRequiresInitialIntake] = useState(true);
   const [editingIntakeFromProfile, setEditingIntakeFromProfile] = useState(false);
+  const [showingIntakeFromHome, setShowingIntakeFromHome] = useState(false);
   const [intakeSnapshot, setIntakeSnapshot] = useState<IntakeSnapshot | null>(null);
   const [intakeHistory, setIntakeHistory] = useState<IntakeHistoryEntry[]>([]);
   const [permissionStatuses, setPermissionStatuses] = useState<
@@ -174,21 +174,17 @@ export default function App() {
     options?: { preserveExistingOnError?: boolean }
   ) => {
     setLoadingIntake(true);
-    setIntakeGateError(null);
 
     try {
       const latest = await fetchLatestPatientIntake(internalPatientId);
       const snapshot = snapshotFromLatest(latest);
       setIntakeSnapshot(snapshot);
       setIntakeHistory(intakeHistoryFromLatest(latest));
-      setRequiresInitialIntake(!snapshot);
       setConnectedWalkthroughCompletedAt(
         latest.profile?.connectedFeaturesWalkthroughCompletedAt || null
       );
     } catch (error) {
-      setIntakeGateError(error instanceof Error ? error.message : "Failed to load intake data.");
       if (!options?.preserveExistingOnError) {
-        setRequiresInitialIntake(true);
         setIntakeSnapshot(null);
         setIntakeHistory([]);
         setConnectedWalkthroughCompletedAt(null);
@@ -200,11 +196,10 @@ export default function App() {
 
   useEffect(() => {
     if (!session) {
-      setActiveTab("navigator");
+      setActiveTab("home");
       setLoadingIntake(false);
-      setIntakeGateError(null);
-      setRequiresInitialIntake(true);
       setEditingIntakeFromProfile(false);
+      setShowingIntakeFromHome(false);
       setIntakeSnapshot(null);
       setIntakeHistory([]);
       setShowConnectedWalkthrough(false);
@@ -216,13 +211,10 @@ export default function App() {
   }, [session]);
 
   useEffect(() => {
-    if (!session || requiresInitialIntake) {
+    if (!session) {
       setShowConnectedWalkthrough(false);
-      return;
     }
-
-    setShowConnectedWalkthrough(!connectedWalkthroughCompletedAt);
-  }, [session, requiresInitialIntake, connectedWalkthroughCompletedAt]);
+  }, [session]);
 
   const completeConnectedWalkthrough = () => {
     if (!session) {
@@ -244,7 +236,7 @@ export default function App() {
 
   const tabItems = useMemo(
     () => [
-      { key: "navigator" as const, label: "Navigator", icon: "⌂" },
+      { key: "home" as const, label: "Home", icon: "⌂" },
       { key: "store" as const, label: "Store", icon: "◉" },
       { key: "medical" as const, label: "Medical", icon: "✚" },
       { key: "profile" as const, label: "Profile", icon: "◎" }
@@ -281,9 +273,9 @@ export default function App() {
     };
 
     setIntakeSnapshot(snapshot);
-    setRequiresInitialIntake(false);
     setEditingIntakeFromProfile(false);
-    setActiveTab("navigator");
+    setShowingIntakeFromHome(false);
+    setActiveTab("home");
     setIntakeHistory((previous) => [
       {
         submittedAt: result.submittedAt,
@@ -365,23 +357,6 @@ export default function App() {
           <ScrollView contentContainerStyle={styles.screenContent}>
             <LoginGate />
           </ScrollView>
-        ) : requiresInitialIntake ? (
-          <ScrollView contentContainerStyle={styles.screenContent}>
-            {loadingIntake ? (
-              <View style={styles.inlineLoadingState}>
-                <ActivityIndicator size="small" color={journeyPalette.spruce} />
-                <Text style={styles.inlineLoadingText}>Syncing profile in background...</Text>
-              </View>
-            ) : null}
-            {intakeGateError ? <Text style={styles.errorText}>{intakeGateError}</Text> : null}
-            <IntakeWizard
-              userId={session.internalPatientId}
-              patientUserId={session.patientUserId}
-              showInternalUserId={session.role === "ADMIN"}
-              mode="initial"
-              onCompleted={handleIntakeCompleted}
-            />
-          </ScrollView>
         ) : editingIntakeFromProfile ? (
           <ScrollView contentContainerStyle={styles.screenContent}>
             <IntakeWizard
@@ -394,6 +369,18 @@ export default function App() {
               onCancel={() => setEditingIntakeFromProfile(false)}
             />
           </ScrollView>
+        ) : showingIntakeFromHome ? (
+          <ScrollView contentContainerStyle={styles.screenContent}>
+            <IntakeWizard
+              userId={session.internalPatientId}
+              patientUserId={session.patientUserId}
+              showInternalUserId={session.role === "ADMIN"}
+              mode={intakeSnapshot ? "profile" : "initial"}
+              initialData={intakeSnapshot ? snapshotToInitialData(intakeSnapshot) : undefined}
+              onCompleted={handleIntakeCompleted}
+              onCancel={() => setShowingIntakeFromHome(false)}
+            />
+          </ScrollView>
         ) : (
           <View style={styles.appBody}>
             {loadingIntake ? (
@@ -403,17 +390,19 @@ export default function App() {
               </View>
             ) : null}
             <View style={styles.tabContent}>
-              <View style={[styles.tabPane, activeTab !== "navigator" && styles.tabPaneHidden]}>
-                <NavigatorDashboard
-                  patientUserId={session.patientUserId}
-                  internalPatientId={session.internalPatientId}
+              <View style={[styles.tabPane, activeTab !== "home" && styles.tabPaneHidden]}>
+                <HomeDashboard
+                  session={session}
                   intakeSnapshot={intakeSnapshot}
                   lifestyleScores={intakeSnapshot?.lifestyleScores}
+                  connectedWalkthroughCompletedAt={connectedWalkthroughCompletedAt}
                   permissionStatuses={permissionStatuses}
                   onRequestPermission={handlePermissionRequest}
                   showConnectedWalkthrough={showConnectedWalkthrough}
                   onCompleteConnectedWalkthrough={completeConnectedWalkthrough}
-                  isActive={activeTab === "navigator"}
+                  onStartIntake={() => setShowingIntakeFromHome(true)}
+                  onStartConnectedWalkthrough={() => setShowConnectedWalkthrough(true)}
+                  isActive={activeTab === "home"}
                 />
               </View>
 
@@ -595,22 +584,6 @@ const styles = StyleSheet.create({
   loadingText: {
     marginTop: 8,
     color: journeyPalette.spruce,
-    fontWeight: "600"
-  },
-  inlineLoadingState: {
-    flexDirection: "row",
-    alignItems: "center",
-    gap: 8,
-    marginBottom: 8
-  },
-  inlineLoadingText: {
-    color: journeyPalette.sage,
-    fontWeight: "600",
-    fontSize: 12
-  },
-  errorText: {
-    marginBottom: 8,
-    color: journeyPalette.clay,
     fontWeight: "600"
   },
   featureCard: {
