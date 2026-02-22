@@ -47,6 +47,9 @@ _Claude needs answers to these to finalize the brief. Set feature to `[?] Brief`
 - <Question 1>
   - Answer:
 
+- **Does this feature need e2e test planning?** (answer: yes or no — required before brief can be finalised)
+  - Answer:
+
 ## Questions from User
 
 _User questions for Claude to research and answer._

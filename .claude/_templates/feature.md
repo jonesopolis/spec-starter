@@ -3,6 +3,7 @@
 **Slug:** `<MM.DD-feature_slug>`
 **Branch:** `<branch_name>`
 **Last Tested:** —
+**E2E Tests:** —
 
 ## Progress
 
