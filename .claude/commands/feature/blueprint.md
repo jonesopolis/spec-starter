@@ -106,10 +106,33 @@ In `1-feature.md`, change `- [o] Blueprint` to `- [x] Blueprint`.
 
 **State update:** Do this immediately after blueprint.md is written.
 
+### Step 6: Generate Mermaid diagram and update 1-feature.md
+
+Based on the blueprint you just wrote, generate a Mermaid architecture diagram that shows the key components or layers and data flow between them. Use `graph TD` orientation (top-down) unless the feature is a linear pipeline, in which case `graph LR` (left-right) is clearer.
+
+Guidelines:
+- 5 to 12 nodes is ideal — keep it concise
+- Label edges with the action or data being passed: `-->|user input|`, `-->|SQL query|`, etc.
+- Use subgraphs only if there are clearly distinct tiers (e.g. Frontend / Backend)
+- No commentary inside the `## Diagram` section — only the fenced code block
+
+Open `1-feature.md` for this feature. Find the `## Diagram` section. Replace from `## Diagram` to the end of the file with:
+
+```markdown
+## Diagram
+
+```mermaid
+<your generated diagram here>
+```
+```
+
+Use the Edit tool to make this replacement.
+
 Output:
 
 ```
-Blueprint written: .claude/_features/$ARGUMENTS/3-blueprint.md
+Blueprint written:  .claude/_features/$ARGUMENTS/3-blueprint.md
+Diagram updated:    .claude/_features/$ARGUMENTS/1-feature.md (## Diagram)
 
 Progress: [x] Brief  [x] Blueprint  [ ] Implement  [ ] Review  [ ] Done
 ```
