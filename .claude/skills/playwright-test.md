@@ -9,7 +9,7 @@ Automate UI e2e scenario execution using Playwright MCP browser tools.
 
 ## Availability check
 
-Before using this skill, confirm that Playwright MCP tools are present in your tool list (look for tools prefixed with `mcp__playwright__` or similar browser automation tools). If they are available, proceed with this skill. If they are not available, fall back to manual confirmation: for each scenario, ask the user "Pass or fail?" and record their answer.
+Before using this skill, confirm that Playwright MCP tools are present in your tool list (look for tools prefixed with `mcp__playwright__` or similar browser automation tools). If they are available, proceed with this skill. If they are not available, stop immediately and report to the caller: "Playwright MCP not available." Do not execute any scenarios. The caller is responsible for handling unavailability (typically by asking the user to confirm each scenario manually).
 
 ## Scenario structure
 
@@ -80,6 +80,8 @@ Evidence: <what was observed>
 ```
 
 Include specific observed text, element presence, or error messages as evidence. Do not report vague evidence like "page loaded correctly."
+
+This skill reports results to the conversation only. It does not modify `4-e2e-checklist.md`. The caller is responsible for marking scenarios `[x]` (pass) or `[!]` (fail) based on this skill's reported outcomes.
 
 ## Error handling
 
