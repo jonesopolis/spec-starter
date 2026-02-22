@@ -9,6 +9,8 @@
 
 **Tech Stack:** <Key technologies, libraries, frameworks>
 
+**E2E Tests:** <yes — checklist generated after implement | no — no checklist>
+
 ---
 
 ## Prerequisites

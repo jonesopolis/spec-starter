@@ -77,10 +77,13 @@ Find which checkbox has `[?]` and act accordingly:
 2. Answer any unanswered "Questions from User" using codebase research
 3. Review "Questions from Claude" — if the user has answered them, incorporate those answers into the relevant brief sections (Overview, Goals, Requirements, etc.)
 4. Identify any remaining gaps — if the brief is still incomplete, add new questions and keep `[?] Brief`
-5. If the brief is complete (no unanswered Questions from Claude remain), update `1-feature.md`:
+5. **E2E gate:** Before marking the brief complete, verify the "Does this feature need e2e test planning?" question in `2-brief.md` has an answer of `yes` or `no`.
+   - If unanswered: surface it as a blocking question, keep `[?] Brief`, and stop — do not proceed to step 6.
+   - If answered: extract the value (`yes` or `no`) and update `**E2E Tests:**` in `1-feature.md` to that value.
+6. If the brief is otherwise complete (no other unanswered Questions from Claude remain), update `1-feature.md`:
    - Change `- [?] Brief` to `- [x] Brief`
-6. **State update:** Always update `1-feature.md` after taking action.
-7. Output what changed and what the next step is.
+7. **State update:** Always update `1-feature.md` after taking action.
+8. Output what changed and what the next step is.
 
 **`[?] Blueprint`:**
 1. Read `.claude/_features/$ARGUMENTS/2-brief.md` and `.claude/_features/$ARGUMENTS/3-blueprint.md`

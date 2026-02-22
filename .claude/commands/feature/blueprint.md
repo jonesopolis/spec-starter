@@ -100,6 +100,8 @@ The blueprint must be:
 - **Codebase-aware** — match existing naming, import styles, test patterns
 - **Self-contained** — a fresh Claude session with only this file should be able to implement the feature
 
+When filling the `**E2E Tests:**` field in the blueprint header, read the value of `**E2E Tests:**` from `1-feature.md`. Write `yes — checklist generated after implement` if yes, or `no — no checklist` if no.
+
 ### Step 5: Update Blueprint to `[x]`
 
 In `1-feature.md`, change `- [o] Blueprint` to `- [x] Blueprint`.
