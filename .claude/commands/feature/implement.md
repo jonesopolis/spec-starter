@@ -134,7 +134,12 @@ Key technical decisions made during implementation.
 
 If the file already exists (resuming), append new entries.
 
-### Step 7: Generate 4-e2e-checklist.md
+### Step 7: Generate 4-e2e-checklist.md (if needed)
+
+Read `**E2E Tests:**` from `1-feature.md`.
+
+- If `no`: skip this step entirely. Do not create `4-e2e-checklist.md`. Go directly to Step 8.
+- If `yes` or `—` (unanswered — treat as yes for safety): continue with the rest of this step.
 
 Create `.claude/_features/$ARGUMENTS/4-e2e-checklist.md` using `.claude/_templates/e2e-checklist.md` as structure.
 
@@ -160,7 +165,7 @@ Tasks completed: <N>
 
 Files created:
 - .claude/_features/$ARGUMENTS/5-implementation-decisions.md
-- .claude/_features/$ARGUMENTS/4-e2e-checklist.md
+- .claude/_features/$ARGUMENTS/4-e2e-checklist.md  _(omitted if E2E Tests: no)_
 
 Next: work through the e2e checklist manually, then mark [x] Review in 1-feature.md.
 ```
