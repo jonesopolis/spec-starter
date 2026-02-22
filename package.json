@@ -1,0 +1,47 @@
+{
+  "name": "journey-health-navigator",
+  "private": true,
+  "main": "index.js",
+  "version": "1.0.0",
+  "packageManager": "pnpm@9.15.0",
+  "scripts": {
+    "dev": "expo start",
+    "dev:ios": "bash ./scripts/ios-dev.sh",
+    "build": "expo export",
+    "lint": "expo lint",
+    "typecheck": "tsc -p tsconfig.json",
+    "android": "expo run:android",
+    "ios": "expo run:ios",
+    "supabase:functions:deploy": "supabase functions deploy intake && supabase functions deploy marketing-researcher",
+    "supabase:functions:deploy:intake": "supabase functions deploy intake",
+    "supabase:functions:deploy:marketing": "supabase functions deploy marketing-researcher"
+  },
+  "dependencies": {
+    "@babel/runtime": "^7.24.7",
+    "@expo/metro-runtime": "^6.1.2",
+    "@journey/db": "workspace:*",
+    "@journey/services": "workspace:*",
+    "@journey/ui": "workspace:*",
+    "@react-native/assets-registry": "0.73.1",
+    "@supabase/supabase-js": "^2.97.0",
+    "expo": "^50.0.0",
+    "expo-camera": "^14.1.3",
+    "expo-health-connect": "^0.1.1",
+    "expo-linking": "^8.0.11",
+    "expo-location": "^16.5.5",
+    "expo-notifications": "^0.27.8",
+    "expo-secure-store": "^15.0.8",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "react-native": "^0.73.0",
+    "react-native-health": "^1.19.0",
+    "react-native-health-connect": "^3.5.0",
+    "react-native-web": "^0.21.2"
+  },
+  "devDependencies": {
+    "@types/react": "^18.3.3",
+    "expo-build-properties": "^1.0.10",
+    "turbo": "^2.3.0",
+    "typescript": "^5.5.4"
+  }
+}

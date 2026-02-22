@@ -1,0 +1,59 @@
+{
+  "expo": {
+    "name": "Journey Health Navigator",
+    "slug": "journey-health-navigator",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "userInterfaceStyle": "light",
+    "scheme": "journeyhealth",
+    "plugins": [
+      "expo-secure-store",
+      "expo-linking",
+      [
+        "expo-build-properties",
+        {
+          "android": {
+            "compileSdkVersion": 34,
+            "targetSdkVersion": 34,
+            "minSdkVersion": 26
+          }
+        }
+      ],
+      [
+        "expo-camera",
+        {
+          "cameraPermission": "Allow Journey Health Navigator to use your camera for nutrition logging."
+        }
+      ],
+      [
+        "expo-location",
+        {
+          "locationWhenInUsePermission": "Allow Journey Health Navigator to use location for nearby care and local recommendations."
+        }
+      ],
+      "expo-notifications",
+      [
+        "react-native-health",
+        {
+          "healthSharePermission": "Allow Journey Health Navigator to read health data for wellness insights and tracking.",
+          "healthUpdatePermission": "Allow Journey Health Navigator to update health data to keep wellness records in sync."
+        }
+      ],
+      "expo-health-connect"
+    ],
+    "splash": {
+      "backgroundColor": "#F9F9F7"
+    },
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "com.journeyhealth.navigator"
+    },
+    "android": {
+      "package": "com.journeyhealth.navigator",
+      "permissions": ["CAMERA", "ACCESS_FINE_LOCATION", "POST_NOTIFICATIONS"],
+      "adaptiveIcon": {
+        "backgroundColor": "#F9F9F7"
+      }
+    }
+  }
+}
