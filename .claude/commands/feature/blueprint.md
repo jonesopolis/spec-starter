@@ -116,15 +116,15 @@ Guidelines:
 - Use subgraphs only if there are clearly distinct tiers (e.g. Frontend / Backend)
 - No commentary inside the `## Diagram` section — only the fenced code block
 
-Open `1-feature.md` for this feature. Find the `## Diagram` section. Replace from `## Diagram` to the end of the file with:
+Open `1-feature.md` for this feature. Find the `## Diagram` section. If the section is not present (feature created before this template update), append the `## Diagram` section to the end of the file instead. Replace from `## Diagram` to the end of the file with:
 
-```markdown
+````markdown
 ## Diagram
 
 ```mermaid
 <your generated diagram here>
 ```
-```
+````
 
 Use the Edit tool to make this replacement.
 

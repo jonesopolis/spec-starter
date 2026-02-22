@@ -111,7 +111,10 @@ For each unchecked scenario (`- [ ]`):
 1. Present the scenario clearly — what to do and what to expect
 2. For CLI/script scenarios: run with Bash and report the result
 3. For UI scenarios (those with **URL**, **Steps**, and **Expected** fields):
-   - If `playwright_available = true`: run the scenario automatically using the `playwright-test` skill. Mark pass/fail based on the skill's reported outcome.
+   - If `playwright_available = true`: run the scenario automatically using the `playwright-test` skill.
+     - PASS → mark the item `[x]`
+     - FAIL → mark the item `[!]`, note what failed, continue
+     - `[!] ERROR` → mark the item `[!]`, record the error evidence, continue
    - If `playwright_available = false`: describe exactly what to check and ask the user: `Pass or fail?`
 4. For manual scenarios (no URL field): describe exactly what to check and ask the user: `Pass or fail?`
 5. If the user confirms pass: mark the item `- [x]` in `e2e-checklist.md` using the Edit tool
