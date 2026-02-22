@@ -1,6 +1,6 @@
 {
   "name": "spec-starter",
-  "version": "1.0.1",
+  "version": "1.1.0",
   "description": "Claude Code project template for structured feature development",
   "bin": {
     "spec-starter": "bin/index.js"
