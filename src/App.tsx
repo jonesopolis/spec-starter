@@ -33,6 +33,9 @@ import {
 } from "./permissions/nativeSettings";
 import { useSupabaseAuth, signOut } from "./auth/useSupabaseAuth";
 import type { AuthSession } from "./auth/useSupabaseAuth";
+import PasswordResetHandler from "./auth/PasswordResetHandler";
+import { supabase } from "./lib/supabase";
+import * as Linking from "expo-linking";
 
 const featureFlags = {
   telehealth:
@@ -118,6 +121,7 @@ function snapshotToInitialData(snapshot: IntakeSnapshot | null): Partial<Patient
 
 export default function App() {
   const { session, isLoading } = useSupabaseAuth();
+  const [showPasswordReset, setShowPasswordReset] = useState(false);
   const [activeTab, setActiveTab] = useState<AppTab>("navigator");
   const [loadingIntake, setLoadingIntake] = useState(false);
   const [intakeGateError, setIntakeGateError] = useState<string | null>(null);
@@ -132,6 +136,32 @@ export default function App() {
   const [connectedWalkthroughCompletedAt, setConnectedWalkthroughCompletedAt] = useState<
     string | null
   >(null);
+
+  // Handle journeyhealth://auth/reset-password deep links
+  useEffect(() => {
+    const handleUrl = (event: { url: string }) => {
+      const parsed = Linking.parse(event.url);
+      if (parsed.path === "auth/reset-password") {
+        const fragment = event.url.split("#")[1] ?? "";
+        const params = new URLSearchParams(fragment);
+        const accessToken = params.get("access_token");
+        const refreshToken = params.get("refresh_token");
+        if (accessToken && refreshToken) {
+          void supabase.auth
+            .setSession({ access_token: accessToken, refresh_token: refreshToken })
+            .then(() => setShowPasswordReset(true));
+        }
+      }
+    };
+
+    const subscription = Linking.addEventListener("url", handleUrl);
+    // Check if app was launched from a reset link
+    void Linking.getInitialURL().then((url) => {
+      if (url) handleUrl({ url });
+    });
+
+    return () => subscription.remove();
+  }, []);
 
   const handlePermissionRequest = async (permission: NativePermissionKind) => {
     const status = await requestNativePermission(permission);
@@ -286,6 +316,30 @@ export default function App() {
               style={styles.loadingIndicator}
             />
           </View>
+        </SafeAreaView>
+      </FeatureFlagProvider>
+    );
+  }
+
+  // Password reset deep link — show form before checking session
+  if (showPasswordReset) {
+    return (
+      <FeatureFlagProvider flags={featureFlags}>
+        <SafeAreaView style={styles.safeArea}>
+          <StatusBar barStyle="dark-content" />
+          <View style={styles.header}>
+            <Image
+              source={require("../assets/logo.png")}
+              style={styles.logo}
+              accessibilityLabel="Journey Health Navigator logo"
+            />
+            <View>
+              <Text style={styles.title}>Journey Health Navigator</Text>
+            </View>
+          </View>
+          <ScrollView contentContainerStyle={styles.screenContent}>
+            <PasswordResetHandler onComplete={() => setShowPasswordReset(false)} />
+          </ScrollView>
         </SafeAreaView>
       </FeatureFlagProvider>
     );
