@@ -34,6 +34,7 @@ Ask one question about manual/e2e testing setup:
 - Are there test accounts or credentials needed?
 - Any browser or device requirements?
 - Anything else needed to run through features manually?
+- Is this a web app? If yes, what is the local dev base URL? (e.g. `http://localhost:3000`)
 
 ### 3. Update CLAUDE.md
 
@@ -57,7 +58,10 @@ Write `.claude/testing.md` with the manual testing setup gathered in Step 2. Thi
 # Testing
 
 ## How to start the app
-<dev server command and URL, or staging URL>
+<dev server command>
+
+## Base URL
+<base URL for the running app, e.g. http://localhost:3000 — or "N/A" if not a web app>
 
 ## Test accounts
 <credentials or "none required">
