@@ -71,7 +71,8 @@ Extract:
 
 **Progress check:**
 - `[o] Review` — proceed
-- `[ ] Review` or `[ ] Implement` — warn: _"Feature hasn't been implemented yet. Run /feature:implement $ARGUMENTS first."_ Stop.
+- `[o] E2E` — warn: _"E2E testing is required but hasn't passed yet. Run /feature:test $ARGUMENTS first."_ Stop.
+- `[ ] E2E` or `[ ] Implement` — warn: _"Feature hasn't been implemented yet. Run /feature:implement $ARGUMENTS first."_ Stop.
 - `[x] Done` — warn: _"Feature is already marked Done."_ Stop.
 - `[x] Review` — warn: _"Review already marked complete but feature isn't Done. Continuing."_ Continue.
 

@@ -4,7 +4,7 @@ argument-hint: "<MM.DD-slug>"
 allowed-tools: Read, Edit, Glob, Bash, mcp__playwright__*
 ---
 
-Walk through the e2e checklist for a feature interactively. The feature must be marked `[x] Done` before testing is allowed.
+Walk through the e2e checklist for a feature interactively.
 
 **Arguments:** $ARGUMENTS
 
@@ -12,7 +12,7 @@ Walk through the e2e checklist for a feature interactively. The feature must be 
 
 - `[ ]` not started · `[?]` needs attention · `[o]` in progress · `[x]` complete · `[!]` blocked
 
-A feature is **ready to test** when: `- [x] Done`
+A feature is **ready to test** when: `- [o] E2E`
 
 ---
 
@@ -25,16 +25,16 @@ A feature is **ready to test** when: `- [x] Done`
 
 ## BROWSE MODE
 
-### Step 1: Find done features
+### Step 1: Find features ready for e2e
 
-Glob all `.claude/_features/*/1-feature.md`. Collect features where Progress shows `- [x] Done`.
+Glob all `.claude/_features/*/1-feature.md`. Collect features where Progress shows `- [o] E2E`.
 
 If none:
 ```
-No features are marked Done.
+No features are ready for e2e testing.
 
-Only completed features can be e2e tested.
-Run /feature:finish <MM.DD-slug> to complete a feature first.
+E2E testing runs after implementation is complete.
+Run /feature:implement <slug> first, or check /feature:status.
 ```
 Then stop.
 
@@ -43,10 +43,10 @@ Then stop.
 ```
 Features ready for e2e testing:
 
-1. <feature-title> (<MM.DD-slug>)
-2. <feature-title> (<MM.DD-slug>)
+1. <feature-title> (<slug>)
+2. <feature-title> (<slug>)
 
-Run /feature:test <MM.DD-slug> to run through the checklist.
+Run /feature:test <slug> to run through the checklist.
 ```
 
 Then stop.
@@ -66,16 +66,10 @@ No feature found: $ARGUMENTS
 Then stop.
 
 **Progress check:**
-- `[x] Done` — proceed
-- Anything else — stop and output:
-```
-Feature is not marked Done yet.
-
-Only completed features can be e2e tested.
-Current state: <active stage>
-
-Run /feature:finish $ARGUMENTS to complete the feature first.
-```
+- `[o] E2E` — proceed
+- `[ ] E2E` or `[x] Implement` with no E2E state — warn: _"Implementation isn't complete yet. Run /feature:implement $ARGUMENTS first."_ Stop.
+- `[x] E2E` — warn: _"E2E already passed. Run /feature:finish $ARGUMENTS to complete the feature."_ Stop.
+- `[x] Done` — warn: _"Feature is already Done."_ Stop.
 
 Read `.claude/_features/$ARGUMENTS/4-e2e-checklist.md`.
 
@@ -137,11 +131,17 @@ Skipped: <N>
 
 If all passed:
 
-Update `1-feature.md`: set `**Last Tested:**` to today's date in `MM.DD.YYYY` format.
+Update `1-feature.md`:
+- Change `- [o] E2E` to `- [x] E2E`
+- Change `- [ ] Review` to `- [o] Review`
+- Set `**Last Tested:**` to today's date in `MM.DD.YYYY` format
 
 ```
-✓ All scenarios passed. Feature fully validated.
-Last Tested updated in 1-feature.md.
+✓ All scenarios passed.
+
+Progress: [x] Implement  [x] E2E  [o] Review  [ ] Done
+
+Next: run /feature:finish <slug> to create the PR.
 ```
 
 If any failed:
@@ -152,4 +152,4 @@ If any failed:
 Failed items are marked [!]. Fix the issues and re-run /feature:test $ARGUMENTS.
 ```
 
-**Note:** This command does not change the feature's Done state — it only updates the checklist file.
+**Note:** E2E state is only advanced to `[x]` when all scenarios pass.

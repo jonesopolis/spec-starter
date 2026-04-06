@@ -10,6 +10,7 @@
 - [ ] Brief
 - [ ] Blueprint
 - [ ] Implement
+- [ ] E2E
 - [ ] Review
 - [ ] Done
 

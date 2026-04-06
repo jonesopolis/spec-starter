@@ -1,6 +1,6 @@
 ---
 description: Implement a feature from its blueprint, then generate e2e-checklist.md
-argument-hint: "<MM.DD-slug>"
+argument-hint: "<slug>"
 allowed-tools: Read, Write, Edit, Glob, Grep, Bash
 ---
 
@@ -45,10 +45,10 @@ Then stop.
 ```
 Features ready to implement:
 
-1. <feature-title> (<MM.DD-slug>)
-2. <feature-title> (<MM.DD-slug>)
+1. <feature-title> (<slug>)
+2. <feature-title> (<slug>)
 
-Run /feature:implement <MM.DD-slug> to implement one.
+Run /feature:implement <slug> to implement one.
 ```
 
 Then stop.
@@ -57,21 +57,30 @@ Then stop.
 
 ## IMPLEMENT MODE
 
-### Step 1: Read feature and blueprint
+### Step 1: Resolve the folder name
 
-Read `.claude/_features/$ARGUMENTS/1-feature.md` and `.claude/_features/$ARGUMENTS/3-blueprint.md`.
+`$ARGUMENTS` may be a full folder name (`[MM.dd] slug`) or just a slug word (`slug`).
+
+- If `$ARGUMENTS` matches a folder in `.claude/_features/` exactly → use it.
+- Otherwise → glob `.claude/_features/*/1-feature.md`, find the first folder whose name ends with `] $ARGUMENTS` (i.e. `[MM.dd] $ARGUMENTS`). Use that folder name.
+- If multiple matches → list them and ask the user to be more specific. Stop.
+- If no match → inform the user and stop.
+
+### Step 2: Read feature and blueprint
+
+Read `.claude/_features/<folder_name>/1-feature.md` and `.claude/_features/<folder_name>/3-blueprint.md`.
 
 If folder or blueprint doesn't exist, inform the user and stop.
 
 **Progress check:**
 - `[x] Blueprint` + `[ ] Implement` — proceed
-- `[?] Blueprint` — warn: _"Blueprint needs review. Run /feature:review $ARGUMENTS first."_ Stop.
-- `[ ] Blueprint` or `[o] Blueprint` — warn: _"No complete blueprint. Run /feature:blueprint $ARGUMENTS first."_ Stop.
+- `[?] Blueprint` — warn: _"Blueprint needs review. Run /feature:review <folder_name> first."_ Stop.
+- `[ ] Blueprint` or `[o] Blueprint` — warn: _"No complete blueprint. Run /feature:blueprint <folder_name> first."_ Stop.
 - `[o] Implement` — warn: _"Already implementing. Resuming from current progress."_ Continue.
 - `[x] Implement` — warn: _"Already implemented. Proceeding will regenerate the e2e checklist."_ Continue.
 - `[!] <stage>` — warn: _"Feature is blocked at <stage>."_ Stop.
 
-### Step 2: Update Implement to `[o]`
+### Step 3: Update Implement to `[o]`
 
 In `1-feature.md`, change `- [ ] Implement` to `- [o] Implement`.
 
@@ -103,22 +112,28 @@ Read each task in `3-blueprint.md` in order. For each task:
 3. Review the subagent's output before moving to the next task — if it failed or skipped TDD, do not proceed
 4. Do not batch multiple tasks into one subagent
 
-### Step 5: Update Implement to `[x]`
+### Step 5: Update progress
 
-Once all tasks are complete:
-- Change `- [o] Implement` to `- [x] Implement` in `1-feature.md`
-- Change `- [ ] Review` to `- [o] Review` in `1-feature.md`
+Once all tasks are complete, read `**E2E Tests:**` from `1-feature.md`:
+
+- If `yes` or `—` (unanswered — treat as yes for safety):
+  - Change `- [o] Implement` to `- [x] Implement`
+  - Change `- [ ] E2E` to `- [o] E2E`
+- If `no`:
+  - Change `- [o] Implement` to `- [x] Implement`
+  - Change `- [ ] E2E` to `- [x] E2E`
+  - Change `- [ ] Review` to `- [o] Review`
 
 **State update:** Do this immediately after all tasks pass.
 
 ### Step 6: Write 5-implementation-decisions.md
 
-Create `.claude/_features/$ARGUMENTS/5-implementation-decisions.md`.
+Create `.claude/_features/<folder_name>/5-implementation-decisions.md`.
 
 Reflect on the session — patterns chosen, trade-offs made — and write 3-5 key decisions.
 
 ```markdown
-# Implementation Decisions: $ARGUMENTS
+# Implementation Decisions: <folder_name>
 
 Key technical decisions made during implementation.
 
@@ -136,12 +151,8 @@ If the file already exists (resuming), append new entries.
 
 ### Step 7: Generate 4-e2e-checklist.md (if needed)
 
-Read `**E2E Tests:**` from `1-feature.md`.
-
-- If `no`: skip this step entirely. Do not create `4-e2e-checklist.md`. Go directly to Step 8.
-- If `yes` or `—` (unanswered — treat as yes for safety): continue with the rest of this step.
-
-Create `.claude/_features/$ARGUMENTS/4-e2e-checklist.md` using `.claude/_templates/e2e-checklist.md` as structure.
+- If `E2E Tests: no`: skip this step entirely. Do not create `4-e2e-checklist.md`. Go directly to Step 8.
+- If `E2E Tests: yes` or `—`: create `.claude/_features/<folder_name>/4-e2e-checklist.md` using `.claude/_templates/e2e-checklist.md` as structure.
 
 Populate it from:
 - The **User Experience** section of `2-brief.md`
@@ -151,21 +162,35 @@ Populate it from:
 
 Every scenario must be specific enough to follow without reading the brief — include exact UI labels, URLs, endpoints, or CLI commands as appropriate.
 
-**State update:** After writing the checklist, confirm `1-feature.md` shows `[x] Implement` and `[o] Review`.
-
 ### Step 8: Output summary
 
+If `E2E Tests: yes` or `—`:
 ```
-Implementation complete: $ARGUMENTS
+Implementation complete: <folder_name>
 
-Progress: [x] Brief  [x] Blueprint  [x] Implement  [o] Review  [ ] Done
+Progress: [x] Brief  [x] Blueprint  [x] Implement  [o] E2E  [ ] Review  [ ] Done
 
 Branch: <branch_name>
 Tasks completed: <N>
 
 Files created:
-- .claude/_features/$ARGUMENTS/5-implementation-decisions.md
-- .claude/_features/$ARGUMENTS/4-e2e-checklist.md  _(omitted if E2E Tests: no)_
+- .claude/_features/<folder_name>/5-implementation-decisions.md
+- .claude/_features/<folder_name>/4-e2e-checklist.md
 
-Next: work through the e2e checklist manually, then mark [x] Review in 1-feature.md.
+Next: run /feature:test <slug> to work through the e2e checklist.
+```
+
+If `E2E Tests: no`:
+```
+Implementation complete: <folder_name>
+
+Progress: [x] Brief  [x] Blueprint  [x] Implement  [x] E2E  [o] Review  [ ] Done
+
+Branch: <branch_name>
+Tasks completed: <N>
+
+Files created:
+- .claude/_features/<folder_name>/5-implementation-decisions.md
+
+Next: review the implementation, then run /feature:finish <slug>.
 ```

@@ -104,7 +104,8 @@ Find which checkbox has `[?]` and act accordingly:
 
 **No `[?]` found:**
 Summarize the feature's current state and suggest the logical next command:
-- `[x] Brief` + no blueprint → suggest `/feature:blueprint $ARGUMENTS`
-- `[x] Blueprint` + no implement → suggest `/feature:implement $ARGUMENTS`
-- `[x] Implement` → suggest running the e2e checklist
+- `[x] Brief` + `[ ] Blueprint` → suggest `/feature:blueprint $ARGUMENTS`
+- `[x] Blueprint` + `[ ] Implement` → suggest `/feature:implement $ARGUMENTS`
+- `[x] Implement` + `[o] E2E` → suggest `/feature:test $ARGUMENTS`
+- `[x] Implement` + `[x] E2E` + `[o] Review` → suggest `/feature:finish $ARGUMENTS`
 - `[x] Done` → feature is complete, nothing to do

@@ -38,11 +38,11 @@ Then stop.
 ```
 Backlog tasks:
 
-1. <task>
-2. <task>
+1. <slug> - <description>
+2. <slug> - <description>
 ...
 
-Run /feature:start <number or idea> to turn one into a feature.
+Run /feature:start <slug or number> to turn one into a feature.
 ```
 
 Then stop.
@@ -51,14 +51,25 @@ Then stop.
 
 ## ADD MODE
 
-### Step 1: Append to backlog
+### Step 1: Derive a slug
 
-Extract the idea: if `$ARGUMENTS` starts with `add ` (case-insensitive), strip that prefix. Otherwise use `$ARGUMENTS` as-is. Add the idea as a new line item to `.claude/tasks.md`.
+Extract the idea: if `$ARGUMENTS` starts with `add ` (case-insensitive), strip that prefix. Otherwise use `$ARGUMENTS` as-is.
 
-### Step 2: Output confirmation
+Pick a `slug` — **1–2 words max**, lowercase, hyphenated if two words, only `a-z 0-9 -`. Choose the most essential word(s) from the idea (e.g. `auth`, `dark-mode`, `search`). Claude decides this — do not ask the user.
+
+### Step 2: Append to backlog
+
+Add a new line to `.claude/tasks.md` in the format:
 
 ```
-Added to backlog: <idea>
+<slug> - <idea>
+```
+
+### Step 3: Output confirmation
+
+```
+Added to backlog: <slug> - <idea>
 
 Run /task to see the full backlog.
+Run /feature:start <slug> to begin immediately.
 ```

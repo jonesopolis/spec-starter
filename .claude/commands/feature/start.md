@@ -49,20 +49,21 @@ Then stop.
 
 ## CREATE MODE
 
-### Step 1: Resolve the idea
+### Step 1: Resolve the idea and slug
 
-If `$ARGUMENTS` is a number, read `.claude/tasks.md` and use the item at that position as the idea.
-Otherwise use `$ARGUMENTS` directly as the idea.
+If `$ARGUMENTS` is a number, read `.claude/tasks.md` and use the item at that position.
+Otherwise use `$ARGUMENTS` directly.
+
+Tasks in the backlog are stored as `<slug> - <idea>`. Parse accordingly:
+- If the resolved item matches `<slug> - <idea>` format → use the existing `slug` and `idea` as-is.
+- If it's a plain idea (no slug prefix) → derive a slug from the idea: **1–2 words max**, lowercase, hyphenated if two words, only `a-z 0-9 -`. Claude decides — do not ask the user.
 
 ### Step 2: Derive names
 
-From the idea, derive:
-- `feature_title` — short, Title Case, human readable
-- `feature_slug` — lowercase kebab-case, only `a-z 0-9 -`, max 40 chars
+- `feature_slug` — from Step 1 (already decided)
+- `feature_title` — short, Title Case, human readable version of the idea
 - `branch_name` — `feature/<feature_slug>`
-- `folder_name` — `MM.DD-<feature_slug>` using today's date (e.g. `02.22-my-feature`)
-
-If you cannot infer a clear title and slug, ask the user to clarify.
+- `folder_name` — `[MM.dd] <feature_slug>` using today's date (e.g. `[04.05] dark-mode`)
 
 ### Step 3: Create the feature folder
 
@@ -122,5 +123,6 @@ Files:
 - 1-feature.md (state + description)
 - 2-brief.md (non-technical goals + questions)
 
-Next: answer the questions in 2-brief.md, then run /feature:review <folder_name>.
+Next: answer the questions in 2-brief.md, then run /feature:review <feature_slug>.
+When ready: /feature:implement <feature_slug>
 ```
